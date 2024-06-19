@@ -1,0 +1,20 @@
+{
+  "name": "argent-bank-project",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Project #10 - Argent Bank",
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "dependencies": {},
+  "scripts": {
+    "start": "turbo run start",
+    "dev": "turbo run dev",
+    "dev:server": "turbo run dev --filter argent-bank-api",
+    "server:db:seed": "pnpm run db:seed --filter argent-bank-api"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.4"
+  },
+  "packageManager": "pnpm@9.4.0"
+}
