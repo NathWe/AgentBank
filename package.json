@@ -11,6 +11,7 @@
     "start": "turbo run start",
     "dev": "turbo run dev",
     "dev:server": "turbo run dev --filter argent-bank-api",
+    "dev:client": "turbo run dev --filter argent-bank-front",
     "server:db:seed": "pnpm run db:seed --filter argent-bank-api"
   },
   "devDependencies": {

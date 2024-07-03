@@ -21,4 +21,5 @@ users.forEach(user => {
     .post(signupApi, user)
     .then(response => console.log(response))
     .catch(error => console.log(error))
+
 })

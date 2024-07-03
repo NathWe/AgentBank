@@ -3,6 +3,8 @@ const userService = require('../services/userService')
 module.exports.createUser = async (req, res) => {
   let response = {}
 
+  console.log('Received data:', req.body)
+
   try {
     const responseFromService = await userService.createUser(req.body)
     response.status = 200
