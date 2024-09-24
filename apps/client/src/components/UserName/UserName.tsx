@@ -1,7 +1,9 @@
+// src/components/UserName/UserName.tsx
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../store";
-import { updateUserData } from "../../services/actions";
+
+import { updateUserInfo } from "../../lib/auth/usecases/UpdateUserInfoUseCase";
+import { AppDispatch } from "../../lib/CreateStore";
 import {
   Header,
   FormChange,
@@ -16,10 +18,9 @@ interface UserNameProps {
     firstName: string;
     lastName: string;
   };
-  token: string;
 }
 
-const UserName: React.FC<UserNameProps> = ({ userData, token }) => {
+const UserName: React.FC<UserNameProps> = ({ userData }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [userName, setUsername] = useState(false);
   const [firstName, setFirstName] = useState(userData.firstName);
@@ -29,10 +30,14 @@ const UserName: React.FC<UserNameProps> = ({ userData, token }) => {
     setUsername(true);
   };
 
-  const name = (e: React.FormEvent) => {
+  const name = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(updateUserData(token, firstName, lastName));
-    setUsername(false);
+    try {
+      await dispatch(updateUserInfo({ firstName, lastName }));
+      setUsername(false);
+    } catch (error) {
+      console.error("Failed to update user data:", error);
+    }
   };
 
   return userName ? (

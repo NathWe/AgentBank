@@ -6,16 +6,32 @@
   "keywords": [],
   "author": "",
   "license": "",
-  "dependencies": {},
   "scripts": {
     "start": "turbo run start",
     "dev": "turbo run dev",
     "dev:server": "turbo run dev --filter argent-bank-api",
     "dev:client": "turbo run dev --filter argent-bank-front",
-    "server:db:seed": "pnpm run db:seed --filter argent-bank-api"
+    "server:db:seed": "cd apps/server && pnpm run db:seed"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/node": "^20.14.10",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@types/react-redux": "^7.1.33",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/redux": "^3.6.0",
+    "@types/redux-thunk": "^2.1.0",
+    "dotenv": "^16.4.5",
     "turbo": "^2.0.4"
   },
-  "packageManager": "pnpm@9.4.0"
+  "packageManager": "pnpm@9.4.0",
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.2.6",
+    "axios": "^1.7.2",
+    "mongodb": "^6.8.0",
+    "prop-types": "^15.8.1",
+    "react-redux": "^9.1.2",
+    "react-router-dom": "^6.24.1"
+  }
 }

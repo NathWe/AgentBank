@@ -1,8 +1,8 @@
+// src/pages/SignIn.tsx
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { fetchUserToken } from "../../services/actions";
-import { AppDispatch } from "../../store";
+
 import {
   Main,
   Section,
@@ -12,21 +12,26 @@ import {
   InputRemember,
   MessageConnexionError,
 } from "./signIn.styles";
+import { login } from "../../lib/auth/usecases/LoginUseCase";
+import { AppDispatch } from "../../lib/CreateStore";
 
-const SignIn = () => {
+const SignIn: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [invalid, setInvalid] = useState(false);
 
-  const login = async (e: React.FormEvent) => {
+  const loginHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     const userLogin = { email, password };
+    console.log("Attempting login with", userLogin);
     try {
-      await dispatch(fetchUserToken(userLogin));
+      await dispatch(login(userLogin));
+      console.log("Login successful, navigating to profile");
       navigate("/profile");
     } catch (error) {
+      console.error("Login failed", error);
       setInvalid(true);
     }
   };
@@ -36,7 +41,7 @@ const SignIn = () => {
       <Section>
         <SignInIcon className="fa fa-user-circle"></SignInIcon>
         <h1>Sign In</h1>
-        <form onSubmit={login}>
+        <form onSubmit={loginHandler}>
           <InputWrapper>
             <label htmlFor="email">Username</label>
             <input

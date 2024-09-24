@@ -1,30 +1,38 @@
+// src/index.tsx
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { store } from "./store";
+
 import App from "./App";
 import GlobalStyles from "./GlobalStyle";
-import { worker } from "../Mocks/browser";
 
-// Démarrer le worker MSW en mode développement uniquement
-if (process.env.REACT_APP_ENV === "development") {
-  worker.start();
-}
+import { createStore } from "./lib/CreateStore";
+import { HttpAuthService } from "./lib/auth/infra/HttpAuthService";
+import { FakeTransactionService } from "./lib/transactions/infra/FakeTransactionService";
 
-console.log("Rendering root");
+const store = createStore({
+  authService: new HttpAuthService(),
+  // transactionService: new HttpTransactionService(),
+  // authService: new FakeAuthService(),
+  transactionService: new FakeTransactionService(),
+});
+
+const Index = () => {
+  return (
+    <React.StrictMode>
+      <Provider store={store}>
+        <BrowserRouter>
+          <GlobalStyles />
+          <App />
+        </BrowserRouter>
+      </Provider>
+    </React.StrictMode>
+  );
+};
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
-root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <GlobalStyles />
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>
-);
+root.render(<Index />);

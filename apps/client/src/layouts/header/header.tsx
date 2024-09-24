@@ -1,19 +1,21 @@
+// src/components/header/header.tsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../store";
-import { actions } from "../../features/auth/reducer";
-import { Nav, NavLink, NavLogo, SrOnly } from "./header.style";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 
+import { Nav, NavLink, NavLogo, SrOnly } from "./header.style";
+import { logout } from "../../lib/auth/slices/authSlice";
+import { RootState, AppDispatch } from "../../lib/CreateStore";
+
 const Header: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(actions.logout());
+    dispatch(logout());
     navigate("/login");
   };
 

@@ -1,55 +1,64 @@
+// src/pages/user/user.tsx
 import React, { useEffect } from "react";
 import UserName from "../../components/UserName/UserName";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "../../store";
-import { signOut, fetchUserData } from "../../services/actions";
 import { useNavigate } from "react-router-dom";
 import AccountItem from "../../components/AccountItem/AccountItem";
 import { PageContainer, Main } from "./user.style";
+import { retrieveUserInfo } from "../../lib/auth/usecases/RetrieveUserInfoUseCase";
+import { fetchTransactions } from "../../lib/transactions/usecases/FetchTransactionsUseCase";
+import { logout } from "../../lib/auth/slices/authSlice";
+import { RootState, AppDispatch } from "../../lib/CreateStore";
 
 const User: React.FC = () => {
   const userData = useSelector((state: RootState) => state.auth.user);
-  const token = useSelector((state: RootState) => state.auth.token);
+  const transactions = useSelector(
+    (state: RootState) => state.transaction.list
+  );
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("User component mounted, userData:", userData);
     if (!userData) {
-      if (token) {
-        dispatch(fetchUserData(token));
-      } else {
-        localStorage.clear();
-        sessionStorage.clear();
-        dispatch(signOut());
-        navigate("/login");
-      }
+      dispatch(retrieveUserInfo())
+        .unwrap()
+        .then(() => {
+          dispatch(fetchTransactions());
+        })
+        .catch(() => {
+          console.log("Failed to retrieve user info, logging out");
+          localStorage.clear();
+          sessionStorage.clear();
+          dispatch(logout());
+          navigate("/login");
+        });
+    } else {
+      dispatch(fetchTransactions());
     }
-  }, [dispatch, navigate, token, userData]);
+  }, [dispatch, navigate, userData]);
 
-  if (!userData || !token) {
+  if (!userData) {
+    console.log("No user data, returning null");
     return null;
   }
+
+  console.log("Rendering user data:", userData);
+  console.log("Rendering transactions data:", transactions);
 
   return (
     <PageContainer>
       <Main>
-        <UserName userData={userData} token={token} />
+        <UserName userData={userData} />
         <h2 className="sr-only">Accounts</h2>
-        <AccountItem
-          accountTitle="Argent Bank Checking (x8349)"
-          accountAmount="$2,082.79"
-          accountBalance="Available Balance"
-        />
-        <AccountItem
-          accountTitle="Argent Bank Savings (x6712)"
-          accountAmount="$10,928.42"
-          accountBalance="Available Balance"
-        />
-        <AccountItem
-          accountTitle="Argent Bank Credit Card (x8349)"
-          accountAmount="$184.30"
-          accountBalance="Current Balance"
-        />
+        {transactions.map((transaction) => (
+          <AccountItem
+            key={transaction.id}
+            accountTitle={transaction.title}
+            accountAmount={`$${transaction.amount.toFixed(2)}`}
+            accountBalance={transaction.balance}
+          />
+        ))}
       </Main>
     </PageContainer>
   );

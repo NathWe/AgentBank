@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import Banner from "../../components/banner/banner";
 import FeaturesChat from "../../components/FeaturesChat/FeaturesChat";
 import FeaturesMoney from "../../components/FeaturesMoney/FeaturesMoney";

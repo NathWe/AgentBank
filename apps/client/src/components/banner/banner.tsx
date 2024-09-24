@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Hero, HeroContent, Subtitle, Text } from "./banner.style";
 
 const Banner: React.FC = () => {
