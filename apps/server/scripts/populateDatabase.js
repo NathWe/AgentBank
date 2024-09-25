@@ -1,6 +1,7 @@
 const axios = require('axios')
 const signupApi = 'http://localhost:3001/api/v1/user/signup'
 
+
 const users = [
   {
     firstName: 'Tony',
